@@ -1,19 +1,20 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Game } from '../../models/game';
+import { PlayerComponent } from '../player/player.component';
 
 @Component({
   selector: 'app-game',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, PlayerComponent],
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss'
 })
-export class GameComponent implements OnInit{
+export class GameComponent implements OnInit {
 
   pickCardAnimation = false;
-  currentCard: string | undefined = '';
-  game: Game | undefined;
+  currentCard: string = '';
+  game!: Game;
 
   constructor() {
   }
@@ -31,16 +32,15 @@ export class GameComponent implements OnInit{
 
 
   takeCard() {
-    if (this.game && this.game.stack.length > 0 && !this.pickCardAnimation) {
-      this.currentCard = this.game.stack.pop();
-      console.log(this.currentCard);
+    if (!this.pickCardAnimation) {
+      this.currentCard = this.game.stack.pop() || '';
       this.pickCardAnimation = true;
- /*      this.game.playedCards.push(this.currentCard); */
+      console.log('New Card' + this.currentCard);
+      console.log('Game is', this.game);
       setTimeout(() => {
-        this.pickCardAnimation = false;
-      }, 1500);
-    } else {
-      console.log('You can not pick a card.');
+          this.game.playedCards.push(this.currentCard);
+          this.pickCardAnimation = false;
+      }, 1000);
     }
 
   }
