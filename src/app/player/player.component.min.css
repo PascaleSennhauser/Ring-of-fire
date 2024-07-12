@@ -1,1 +1,1 @@
-.player{width:300px;display:flex;align-items:center;border-top-left-radius:50px;border-bottom-left-radius:50px;background-color:orange}.player span{font-size:32px;margin-left:16px}.player img{width:100px;height:100px;object-fit:cover;border-radius:100%}
+.player{width:300px;display:flex;align-items:center;border-top-left-radius:50px;border-bottom-left-radius:50px;background-color:rgba(148,148,148,0.5)}.player span{font-size:32px;margin-left:16px}.player img{width:70px;height:70px;object-fit:cover;border-radius:100%}.player-active{background-color:orange !important}

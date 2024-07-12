@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Game } from '../../models/game';
 import { PlayerComponent } from '../player/player.component';
+import { GameInfoComponent } from '../game-info/game-info.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
@@ -17,7 +18,8 @@ import { MatDialogModule } from '@angular/material/dialog';
   standalone: true,
   imports: [
     CommonModule, 
-    PlayerComponent, 
+    PlayerComponent,
+    GameInfoComponent, 
     MatButtonModule,
     MatIconModule, 
     FormsModule, 

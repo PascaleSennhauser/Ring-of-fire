@@ -9,4 +9,5 @@ import { Component, Input } from '@angular/core';
 })
 export class PlayerComponent {
   @Input() name = '';
+  @Input() playerActive: boolean = false;
 }
