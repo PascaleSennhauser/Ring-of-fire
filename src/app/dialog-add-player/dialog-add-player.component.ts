@@ -39,7 +39,6 @@ export class DialogAddPlayerComponent {
 
   constructor(
     public dialogRef: MatDialogRef<DialogAddPlayerComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: '',
   ) {}
 
   onNoClick(): void {
