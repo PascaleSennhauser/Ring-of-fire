@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Game } from '../../models/game';
 import { PlayerComponent } from '../player/player.component';
@@ -11,6 +11,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { Firestore, collection, collectionData, onSnapshot, doc } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 
 
 @Component({
@@ -34,16 +36,36 @@ import { MatDialogModule } from '@angular/material/dialog';
 
 export class GameComponent {
 
+  firestore: Firestore = inject(Firestore);
   pickCardAnimation = false;
   currentCard: string = '';
   game!: Game;
+  unsubGames;
 
 
-  constructor(public dialog: MatDialog) {}
+  constructor(public dialog: MatDialog) {
+    this.unsubGames = onSnapshot(this.getGamesRef(), (games) => {
+      games.forEach(game =>  {
+        console.log("Game update", game.data());
+      });
+    });
+  }
+
+  getGamesRef() {
+    return collection(this.firestore, 'games');
+  }
+
+  getSingleGameRef(colId: string, docId: string) {
+    return doc(collection(this.firestore, colId), docId);
+  }
 
 
   ngOnInit(): void {
     this.newGame();
+  }
+
+  ngOnDestroy() {
+    this.unsubGames;
   }
 
 
