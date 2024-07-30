@@ -11,21 +11,22 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
 import { MatDialogModule } from '@angular/material/dialog';
-import { Firestore, collection, collectionData, onSnapshot, doc } from '@angular/fire/firestore';
+import { Firestore, collection, collectionData, onSnapshot, doc, addDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
   selector: 'app-game',
   standalone: true,
   imports: [
-    CommonModule, 
+    CommonModule,
     PlayerComponent,
-    GameInfoComponent, 
+    GameInfoComponent,
     MatButtonModule,
-    MatIconModule, 
-    FormsModule, 
-    MatInputModule, 
+    MatIconModule,
+    FormsModule,
+    MatInputModule,
     MatFormFieldModule,
     MatDialogModule
   ],
@@ -40,38 +41,46 @@ export class GameComponent {
   pickCardAnimation = false;
   currentCard: string = '';
   game!: Game;
-  unsubGames;
+  unsubGame: any;
 
 
-  constructor(public dialog: MatDialog) {
-    this.unsubGames = onSnapshot(this.getGamesRef(), (games) => {
-      games.forEach(game =>  {
-        console.log("Game update", game.data());
-      });
-    });
+  constructor(private route: ActivatedRoute, public dialog: MatDialog) {
   }
+
+
+  ngOnInit(): void {
+    this.newGame()
+    this.route.params.subscribe((params) => {
+      console.log(params['id']);
+
+      this.unsubGame = onSnapshot(this.getSingleGameRef('games', params['id']), (game: any) => {
+        console.log("Game update", game.data());
+        this.game.currentPlayer = game.currentPlayer;
+        this.game.playedCards = game.playedCards;
+        this.game.players = game.players;
+        this.game.stack = game.stack;
+      });
+    })
+  }
+
+
+  newGame() {
+    this.game = new Game();
+  }
+
 
   getGamesRef() {
     return collection(this.firestore, 'games');
   }
+
 
   getSingleGameRef(colId: string, docId: string) {
     return doc(collection(this.firestore, colId), docId);
   }
 
 
-  ngOnInit(): void {
-    this.newGame();
-  }
-
   ngOnDestroy() {
-    this.unsubGames;
-  }
-
-
-  newGame() {
-    this.game = new Game();
-    console.log(this.game);
+    this.unsubGame;
   }
 
 
@@ -84,8 +93,8 @@ export class GameComponent {
       this.game.currentPlayer++;
       this.game.currentPlayer = this.game.currentPlayer % this.game.players.length;
       setTimeout(() => {
-          this.game.playedCards.push(this.currentCard);
-          this.pickCardAnimation = false;
+        this.game.playedCards.push(this.currentCard);
+        this.pickCardAnimation = false;
       }, 1000);
     }
   }
