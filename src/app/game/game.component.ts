@@ -11,7 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
 import { MatDialogModule } from '@angular/material/dialog';
-import { Firestore, collection, collectionData, onSnapshot, doc, addDoc } from '@angular/fire/firestore';
+import { Firestore, collection, collectionData, onSnapshot, doc, addDoc, updateDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 
@@ -38,10 +38,9 @@ import { ActivatedRoute } from '@angular/router';
 export class GameComponent {
 
   firestore: Firestore = inject(Firestore);
-  pickCardAnimation = false;
-  currentCard: string = '';
   game!: Game;
   unsubGame: any;
+  gameId!: string;
 
 
   constructor(private route: ActivatedRoute, public dialog: MatDialog) {
@@ -49,17 +48,18 @@ export class GameComponent {
 
 
   ngOnInit(): void {
-    this.newGame()
+    this.newGame();
     this.route.params.subscribe((params) => {
-      console.log(params['id']);
-
+      this.gameId = params['id'];
       this.unsubGame = onSnapshot(this.getSingleGameRef('games', params['id']), (game: any) => {
-        console.log("Game update", game.data());
-        this.game.currentPlayer = game.currentPlayer;
-        this.game.playedCards = game.playedCards;
-        this.game.players = game.players;
-        this.game.stack = game.stack;
+        this.game.currentPlayer = game.data().currentPlayer;
+        this.game.playedCards = game.data().playedCards;
+        this.game.players = game.data().players;
+        this.game.stack = game.data().stack;
+        this.game.pickCardAnimation = game.data().pickCardAnimation;
+        this.game.currentCard = game.data().currentCard;
       });
+      
     })
   }
 
@@ -85,29 +85,37 @@ export class GameComponent {
 
 
   takeCard() {
-    if (!this.pickCardAnimation) {
-      this.currentCard = this.game.stack.pop() || '';
-      this.pickCardAnimation = true;
-      console.log('New Card' + this.currentCard);
-      console.log('Game is', this.game);
+    if (!this.game.pickCardAnimation) {
+      this.game.currentCard = this.game.stack.pop() || '';
+      this.game.pickCardAnimation = true;
       this.game.currentPlayer++;
       this.game.currentPlayer = this.game.currentPlayer % this.game.players.length;
+      this.saveGame();
       setTimeout(() => {
-        this.game.playedCards.push(this.currentCard);
-        this.pickCardAnimation = false;
+        this.game.playedCards.push(this.game.currentCard);
+        this.game.pickCardAnimation = false;
+        this.saveGame();
       }, 1000);
     }
   }
 
 
-  openDialog(): void {
+  async openDialog(): Promise<void> {
     const dialogRef = this.dialog.open(DialogAddPlayerComponent);
 
     dialogRef.afterClosed().subscribe((name: string) => {
       if (name && name.length > 0) {
         this.game.players.push(name);
+        this.saveGame();
       }
     });
+  }
+
+
+  async saveGame() {
+    const singleGameRef = this.getSingleGameRef('games', this.gameId);
+    // console.log("This.game.toJson", this.game.toJson());
+    await updateDoc(singleGameRef, this.game.toJson());
   }
 
 }

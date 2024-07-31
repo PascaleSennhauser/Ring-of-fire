@@ -24,7 +24,7 @@ export class StartScreenComponent {
     let gameJson = game.toJson();
     try {
       const gameInfo = await this.addGame(gameJson);
-      console.log(gameInfo.id);
+      console.log("Start screen id", gameInfo.id);
       this.router.navigateByUrl('/game/' + gameInfo.id);
     } catch (err) {
       console.error('Error in newGame', err);
@@ -32,12 +32,11 @@ export class StartScreenComponent {
   }
 
 
-  async addGame(gameJson: object) {
+  async addGame(gameJson: Object) {
     try {
-      const docRef = await addDoc(collection(this.firestore, 'games'), {
+      const docRef = await addDoc(collection(this.firestore, 'games'), 
         gameJson
-      });
-      console.log('added');
+      );
       return docRef;
     } catch (err) {
       console.error('Error adding game:', err);
