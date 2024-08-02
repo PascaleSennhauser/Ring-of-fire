@@ -111,3 +111,10 @@ app-player:hover, app-player-mobile:hover {
 .game-over img {
   width: 300px;
 }
+
+.preload-image {
+  opacity: 0;
+  height: 0px;
+  width: 0px;
+  z-index: -999;
+}
