@@ -1,0 +1,23 @@
+.edit-player-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.picture-container {
+    display: flex;
+    gap: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.profile-picture {
+    width: 60px;
+    height: 60px;
+    border-radius: 100%;
+    cursor: pointer;
+
+    &:hover {
+        filter: brightness(1.15);
+    }
+}

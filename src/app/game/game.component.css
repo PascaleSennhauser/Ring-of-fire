@@ -71,3 +71,43 @@
   left: 100px;
   right: 100px;
 }
+
+@media (max-width: 720px) {
+  .pin-bottom {
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+}
+
+.scroll-container {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.scroll-container app-player-mobile {
+  margin-left: 8px;
+}
+
+app-player, app-player-mobile {
+  cursor: pointer;
+}
+
+app-player:hover, app-player-mobile:hover {
+  filter: brightness(1.15);
+}
+
+.game-over {
+  display: flex;
+  justify-content: center;
+  margin-top: 200px;
+}
+
+.game-over img {
+  width: 300px;
+}
