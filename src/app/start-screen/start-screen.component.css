@@ -38,3 +38,26 @@
   filter: brightness(1.25);
   cursor: pointer;
 }
+
+a {
+  position: absolute;
+  top: 50px;
+  text-decoration: none;
+  color: black;
+}
+
+a .imprint-button {
+  background-color: #E4AD00;
+  height: 30px;
+  width: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 500;
+  border-radius: 10px;
+}
+
+a .imprint-button:hover {
+  cursor: pointer;
+  filter: brightness(1.25);
+}
