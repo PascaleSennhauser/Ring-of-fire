@@ -1,7 +1,5 @@
-import { Component, Inject } from '@angular/core';
+import { Component} from '@angular/core';
 import {
-  MatDialog,
-  MAT_DIALOG_DATA,
   MatDialogRef,
   MatDialogTitle,
   MatDialogContent,
@@ -37,10 +35,19 @@ import { MatDialogModule } from '@angular/material/dialog';
 export class DialogAddPlayerComponent {
   name: string = '';
 
+
+  /**
+   * This constructor creates an instance of DialogAddPlayerComponent.
+   * @param dialogRef - Reference to the MatDialog containing this component.
+   */
   constructor(
     public dialogRef: MatDialogRef<DialogAddPlayerComponent>,
   ) {}
 
+
+  /**
+   * This method closes the dialog.
+   */
   onNoClick(): void {
     this.dialogRef.close();
   }
