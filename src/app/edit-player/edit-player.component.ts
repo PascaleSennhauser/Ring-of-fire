@@ -3,8 +3,6 @@ import { CommonModule } from '@angular/common';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import {
-  MatDialog,
-  MAT_DIALOG_DATA,
   MatDialogRef,
   MatDialogTitle,
   MatDialogContent,
@@ -29,9 +27,18 @@ export class EditPlayerComponent {
 
   allProfilePictures = ['1.png', '2.png', '3.png', '4.png'];
 
+
+  /**
+   * This constructor creates an instance of EditPlayerComponent.
+   * @param dialogRef - Reference to the MatDialog containing this component.
+   */
   constructor(public dialogRef: MatDialogRef<EditPlayerComponent>) {
   }
 
+
+  /**
+   * This method closes the dialog.
+   */
   onNoClick() {
     this.dialogRef.close();
   }

@@ -13,8 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
 import { EditPlayerComponent } from '../edit-player/edit-player.component';
 import { MatDialogModule } from '@angular/material/dialog';
-import { Firestore, collection, collectionData, onSnapshot, doc, addDoc, updateDoc } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { Firestore, collection, collectionData, onSnapshot, doc, addDoc, updateDoc, CollectionReference, DocumentReference } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
 
 
@@ -49,48 +48,86 @@ export class GameComponent {
   gameOver = false;
 
 
+  /**
+   * This constructor creates instances of the components.
+   * @param route - the Angular route information, used to access route parameters and query parameters.
+   * @param dialog - The Angualr Material Dialog service, used to open and manage dialogs.
+   */
   constructor(private route: ActivatedRoute, public dialog: MatDialog) {
   }
 
 
+  /**
+   * This method starts a new game with the id of the route parameter.
+   */
   ngOnInit(): void {
     this.newGame();
     this.route.params.subscribe((params) => {
       this.gameId = params['id'];
       this.unsubGame = onSnapshot(this.getSingleGameRef('games', params['id']), (game: any) => {
-        this.game.currentPlayer = game.data().currentPlayer;
-        this.game.playedCards = game.data().playedCards;
-        this.game.players = game.data().players;
-        this.game.player_images = game.data().player_images;
-        this.game.stack = game.data().stack;
-        this.game.pickCardAnimation = game.data().pickCardAnimation;
-        this.game.currentCard = game.data().currentCard;
+        this.initializeNewGame(game);
       });
-      
     })
   }
 
 
+  /**
+   * This method initializes the game variables.
+   * @param game 
+   */
+  initializeNewGame(game: any) {
+    this.game.currentPlayer = game.data().currentPlayer;
+    this.game.playedCards = game.data().playedCards;
+    this.game.players = game.data().players;
+    this.game.player_images = game.data().player_images;
+    this.game.stack = game.data().stack;
+    this.game.pickCardAnimation = game.data().pickCardAnimation;
+    this.game.currentCard = game.data().currentCard;
+  }
+
+
+  /**
+   * This method initializes a new game instance.
+   */
   newGame() {
     this.game = new Game();
   }
 
 
+  /**
+   * This method retrieves a refernce to the 'games' collection in Firestore.
+   * @returns {CollectionReference} A reference to the 'games' collection in Firestore.
+   */
   getGamesRef() {
     return collection(this.firestore, 'games');
   }
 
 
+  /**
+   * This method retrieves a reference to a specific document in the 'games' collection in Firestore.
+   * @param colId - The collection id in this case 'games'.
+   * @param docId - The document id.
+   * @returns {DocumentReference} A reference to the specific document in the 'games' collection in Firestore.
+   */
   getSingleGameRef(colId: string, docId: string) {
     return doc(collection(this.firestore, colId), docId);
   }
 
 
+  /**
+   * This method is executed, wehn the compnent is destroyed. The snapshot listener gets unsubscribed.
+   */
   ngOnDestroy() {
     this.unsubGame;
   }
 
 
+  /**
+   * This method gets executed when you take a new card.
+   * 
+   * If the game is over, the game over screen is shown.
+   * Else a card from the game stack is selected with the suitable animation and the next player is highlighted.
+   */
   takeCard() {
     if (this.game.stack.length == 0) {
       this.gameOver = true;
@@ -109,9 +146,11 @@ export class GameComponent {
   }
 
 
+  /**
+   * This method opens the dialog to add a new player and saves the name of a new player, when the dialog gets closed.
+   */
   async openDialog(): Promise<void> {
     const dialogRef = this.dialog.open(DialogAddPlayerComponent);
-
     dialogRef.afterClosed().subscribe((name: string) => {
       if (name && name.length > 0) {
         this.game.players.push(name);
@@ -122,12 +161,19 @@ export class GameComponent {
   }
 
 
+  /**
+   * This method updates the game variables in the Firestore.
+   */
   async saveGame() {
     const singleGameRef = this.getSingleGameRef('games', this.gameId);
-    // console.log("This.game.toJson", this.game.toJson());
     await updateDoc(singleGameRef, this.game.toJson());
   }
 
+
+  /**
+   * This method opens the dialog to edit the picture of a player and saves the made changes by updating the game variables in the Firestore.
+   * @param playerId - The id of the selected player.
+   */
   editPlayer(playerId: number) {
     const dialogRef = this.dialog.open(EditPlayerComponent);
     dialogRef.afterClosed().subscribe((change: string) => {
@@ -141,8 +187,5 @@ export class GameComponent {
         this.saveGame();
       }
     });
-    
-    console.log('Edit player', playerId);
   }
-
 }

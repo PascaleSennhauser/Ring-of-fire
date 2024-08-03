@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import {MatCardModule} from '@angular/material/card';
 
+
 @Component({
   selector: 'app-game-info',
   standalone: true,
@@ -8,6 +9,8 @@ import {MatCardModule} from '@angular/material/card';
   templateUrl: './game-info.component.html',
   styleUrl: './game-info.component.scss'
 })
+
+
 export class GameInfoComponent {
   cardAction = [
     { title: 'Waterfall', description: 'Everyone has to start drinking at the same time. As soon as player 1 stops drinking, player 2 may stop drinking. Player 3 may stop as soon as player 2 stops drinking, and so on.' },
@@ -30,9 +33,12 @@ export class GameInfoComponent {
 
   @Input() card: string = '';
 
+
+  /**
+   * This method shows the specific information according to the current card.
+   */
   ngOnChanges(): void {
     if(this.card) {
-      console.log('Current card is:', this.card);
       let cardNumber = +this.card.split('_')[1];
       this.title = this.cardAction[cardNumber-1].title;
       this.description = this.cardAction[cardNumber-1].description;

@@ -1,1 +1,1 @@
-@media (max-width: 720px){mat-card{min-height:120px}}
+mat-card mat-card-title{margin-left:10px}@media (max-width: 720px){mat-card{min-height:120px}}

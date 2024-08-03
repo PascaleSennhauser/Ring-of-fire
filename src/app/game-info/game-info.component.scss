@@ -1,4 +1,7 @@
 mat-card {
+    mat-card-title {
+        margin-left: 10px;
+    }
     @media (max-width: 720px) {
         min-height: 120px;
     }
