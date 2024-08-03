@@ -1,8 +1,16 @@
 .min-height {
-    min-height: 100vh;
+    height: 100vh;
     color: white;
     background-color: #404040;
     padding: 40px;
+    box-sizing: border-box;
+    @media (max-width: 400px) {
+        padding: 10px;
+        font-size: 12px;
+        h1 {
+            font-size: 16px;
+        }
+    }
 }
 
 .back-arrow {
@@ -20,6 +28,11 @@
 }
 
 .imprint-container {
+    @media (max-width: 400px) {
+        ul {
+            padding-inline-start: 20px;
+        }
+    }
     a {
         text-decoration: none;
         color: white;
