@@ -1,4 +1,5 @@
 # Ring Of Fire
+Ring-of-Fire is a popular drinking game, where you have a card stack. Each card has a specific rule or task that must be followed when drawn. The goal is to complete the game by following the rules while having a good time.
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.0.3.
 
